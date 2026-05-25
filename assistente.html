@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Saúde Fiscal — Assistente Tributário</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,600;1,9..144,300&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --verde: #0f6e56;
+    --verde-light: #e1f5ee;
+    --verde-mid: #1d9e75;
+    --verde-dark: #085041;
+    --ouro: #ba7517;
+    --ouro-light: #faeeda;
+    --bg: #f9f8f5;
+    --surface: #ffffff;
+    --text: #1a1a1a;
+    --text-muted: #6b6b6b;
+    --border: #e0ddd5;
+    --radius: 14px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; }
+  header { background: var(--verde-dark); padding: 18px 32px; display: flex; align-items: center; justify-content: space-between; }
+  .logo { font-family: 'Fraunces', serif; font-size: 22px; font-weight: 500; color: #ffffff; letter-spacing: -0.3px; }
+  .logo span { color: #5DCAA5; }
+  .badge-header { font-size: 12px; color: #9FE1CB; background: rgba(255,255,255,0.1); padding: 5px 12px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.15); }
+  .hero { background: var(--verde-dark); padding: 40px 32px 56px; color: white; }
+  .hero h1 { font-family: 'Fraunces', serif; font-size: 34px; font-weight: 500; line-height: 1.2; max-width: 560px; margin-bottom: 12px; }
+  .hero h1 em { font-style: italic; color: #5DCAA5; }
+  .hero p { font-size: 15px; color: #9FE1CB; font-weight: 300; max-width: 480px; line-height: 1.6; }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 28px; }
+  .chip { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); color: #E1F5EE; font-size: 13px; padding: 7px 14px; border-radius: 20px; cursor: pointer; transition: background 0.15s; font-family: 'DM Sans', sans-serif; }
+  .chip:hover { background: rgba(29,158,117,0.3); border-color: #5DCAA5; }
+  .main { flex: 1; max-width: 760px; width: 100%; margin: 0 auto; padding: 32px 24px 80px; }
+  #chat-area { display: flex; flex-direction: column; gap: 20px; min-height: 200px; }
+  .msg { display: flex; gap: 12px; align-items: flex-start; animation: fadeUp 0.25s ease; }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+  .msg.user { flex-direction: row-reverse; }
+  .avatar { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 500; flex-shrink: 0; }
+  .avatar.bot { background: var(--verde-dark); color: #5DCAA5; font-family: 'Fraunces', serif; font-size: 16px; }
+  .avatar.user-av { background: var(--ouro-light); color: var(--ouro); font-size: 11px; }
+  .bubble { max-width: 82%; padding: 14px 18px; border-radius: var(--radius); font-size: 14.5px; line-height: 1.65; }
+  .bubble.bot { background: var(--surface); border: 1px solid var(--border); color: var(--text); border-top-left-radius: 4px; }
+  .bubble.user { background: var(--verde-dark); color: #ffffff; border-top-right-radius: 4px; }
+  .bubble p { margin-bottom: 10px; }
+  .bubble p:last-child { margin-bottom: 0; }
+  .bubble strong { font-weight: 500; color: var(--verde); }
+  .bubble.user strong { color: #9FE1CB; }
+  .disclaimer { background: var(--ouro-light); border-left: 3px solid var(--ouro); border-radius: 0 8px 8px 0; padding: 10px 14px; margin-top: 12px; font-size: 12.5px; color: #6b4e0a; line-height: 1.5; }
+  .typing-indicator { display: flex; gap: 5px; padding: 16px 18px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); border-top-left-radius: 4px; width: fit-content; }
+  .dot { width: 7px; height: 7px; background: var(--verde-mid); border-radius: 50%; animation: bounce 1.2s infinite; }
+  .dot:nth-child(2) { animation-delay: 0.2s; }
+  .dot:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes bounce { 0%, 60%, 100% { transform: translateY(0); } 30% { transform: translateY(-6px); } }
+  .input-area { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(249,248,245,0.96); backdrop-filter: blur(12px); border-top: 1px solid var(--border); padding: 16px 24px 20px; }
+  .input-wrap { max-width: 760px; margin: 0 auto; display: flex; gap: 10px; align-items: flex-end; }
+  #user-input { flex: 1; border: 1.5px solid var(--border); border-radius: var(--radius); padding: 12px 16px; font-family: 'DM Sans', sans-serif; font-size: 14.5px; resize: none; min-height: 48px; max-height: 120px; background: var(--surface); color: var(--text); outline: none; transition: border-color 0.15s; line-height: 1.5; }
+  #user-input:focus { border-color: var(--verde-mid); }
+  #user-input::placeholder { color: #aaa; }
+  #send-btn { width: 48px; height: 48px; background: var(--verde-dark); color: white; border: none; border-radius: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: background 0.15s, transform 0.1s; }
+  #send-btn:hover { background: var(--verde); }
+  #send-btn:active { transform: scale(0.95); }
+  #send-btn:disabled { background: #ccc; cursor: default; }
+  #send-btn svg { width: 20px; height: 20px; }
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">Saúde<span>Fiscal</span></div>
+  <div class="badge-header">Assistente Tributário com IA</div>
+</header>
+<div class="hero">
+  <h1>Tire suas dúvidas tributárias <em>sem complicação</em></h1>
+  <p>Feito para médicos, dentistas, psicólogos e fisioterapeutas PJ. Pergunte sobre Reforma Tributária, distribuição de lucros, NFS-e, Receita Saúde e muito mais.</p>
+  <div class="chips">
+    <div class="chip" onclick="perguntaRapida('Qual a diferença entre Simples Nacional e Lucro Presumido para dentistas?')">Simples vs Lucro Presumido</div>
+    <div class="chip" onclick="perguntaRapida('Como funciona a distribuição de lucros em 2026 para médicos PJ?')">Distribuição de lucros 2026</div>
+    <div class="chip" onclick="perguntaRapida('O que é o Receita Saúde e como devo usar como profissional de saúde?')">O que é o Receita Saúde?</div>
+    <div class="chip" onclick="perguntaRapida('Como definir o pró-labore ideal para pagar menos imposto?')">Pró-labore ideal</div>
+    <div class="chip" onclick="perguntaRapida('Posso deduzir despesas do consultório no imposto de renda?')">Deduções do consultório</div>
+  </div>
+</div>
+<div class="main">
+  <div id="chat-area">
+    <div class="msg">
+      <div class="avatar bot">S</div>
+      <div class="bubble bot">
+        <p>Olá! Sou o assistente tributário do <strong>SaúdeFiscal</strong>. Estou aqui para ajudar médicos, dentistas, psicólogos e fisioterapeutas PJ a entender suas obrigações fiscais em 2026.</p>
+        <p>Pergunte sobre Reforma Tributária, distribuição de lucros, NFS-e, Receita Saúde, pró-labore, Simples Nacional, Lucro Presumido e muito mais.</p>
+        <div class="disclaimer">⚠️ Este assistente fornece orientação educacional. Para decisões contábeis específicas, consulte sempre um contador especializado.</div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="input-area">
+  <div class="input-wrap">
+    <textarea id="user-input" rows="1" placeholder="Digite sua dúvida tributária..." onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
+    <button id="send-btn" onclick="enviarMensagem()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+    </button>
+  </div>
+</div>
+<script>
+const SYSTEM_PROMPT = `Você é um assistente tributário especializado em profissionais de saúde brasileiros que atuam como Pessoa Jurídica (PJ). Seu público são médicos, dentistas, psicólogos e fisioterapeutas.
+
+Você tem conhecimento profundo sobre:
+- Reforma Tributária 2026 (IBS, CBS, impactos no setor de saúde)
+- Simples Nacional vs Lucro Presumido para profissionais de saúde
+- Distribuição de lucros: nova regra de tributação de 10% sobre distribuições acima de R$50.000/mês para pessoa física
+- Pró-labore: como definir e tributação de INSS e IR
+- Receita Saúde: sistema de emissão de recibos digitais da Receita Federal
+- NFS-e: Nota Fiscal de Serviços Eletrônica obrigatória
+- Holding patrimonial para médicos e dentistas
+- IRPF e IRPJ para profissionais de saúde
+- Deduções permitidas para consultórios e clínicas
+- Carnê-Leão para atendimentos de pessoa física
+
+Regras:
+1. Responda em português brasileiro claro e acessível
+2. Use exemplos práticos com valores reais quando útil
+3. Separe bem os parágrafos
+4. Sempre encerre com recomendação de consultar contador para decisões específicas
+5. Seja direto e útil. Máximo 350 palavras.
+6. Se fugir do tema fiscal/tributário, redirecione gentilmente`;
+
+let historico = [];
+let carregando = false;
+
+function autoResize(el) {
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 120) + 'px';
+}
+
+function handleKey(e) {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); enviarMensagem(); }
+}
+
+function perguntaRapida(texto) {
+  document.getElementById('user-input').value = texto;
+  enviarMensagem();
+}
+
+function addMsg(conteudo, tipo) {
+  const chat = document.getElementById('chat-area');
+  const msg = document.createElement('div');
+  msg.className = 'msg' + (tipo === 'user' ? ' user' : '');
+  const avatar = document.createElement('div');
+  avatar.className = 'avatar ' + (tipo === 'user' ? 'user-av' : 'bot');
+  avatar.textContent = tipo === 'user' ? 'Você' : 'S';
+  const bubble = document.createElement('div');
+  bubble.className = 'bubble ' + (tipo === 'user' ? 'user' : 'bot');
+  if (tipo === 'user') {
+    bubble.textContent = conteudo;
+  } else {
+    bubble.innerHTML = formatarResposta(conteudo);
+  }
+  msg.appendChild(avatar);
+  msg.appendChild(bubble);
+  chat.appendChild(msg);
+  window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+  return msg;
+}
+
+function formatarResposta(texto) {
+  let html = texto
+    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+    .replace(/\*(.*?)\*/g, '<em>$1</em>');
+  const paragrafos = html.split(/\n{2,}/);
+  html = paragrafos.map(p => p.trim() ? '<p>' + p.replace(/\n/g, '<br>') + '</p>' : '').join('');
+  return html;
+}
+
+function showTyping() {
+  const chat = document.getElementById('chat-area');
+  const wrap = document.createElement('div');
+  wrap.className = 'msg'; wrap.id = 'typing';
+  const avatar = document.createElement('div');
+  avatar.className = 'avatar bot'; avatar.textContent = 'S';
+  const ind = document.createElement('div');
+  ind.className = 'typing-indicator';
+  ind.innerHTML = '<div class="dot"></div><div class="dot"></div><div class="dot"></div>';
+  wrap.appendChild(avatar); wrap.appendChild(ind);
+  chat.appendChild(wrap);
+  window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+}
+
+function removeTyping() {
+  const t = document.getElementById('typing');
+  if (t) t.remove();
+}
+
+async function enviarMensagem() {
+  if (carregando) return;
+  const input = document.getElementById('user-input');
+  const texto = input.value.trim();
+  if (!texto) return;
+  input.value = ''; input.style.height = 'auto';
+  carregando = true;
+  document.getElementById('send-btn').disabled = true;
+  addMsg(texto, 'user');
+  historico.push({ role: 'user', content: texto });
+  showTyping();
+  try {
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        system: SYSTEM_PROMPT,
+        messages: historico
+      })
+    });
+    const data = await response.json();
+    const resposta = data.content?.map(b => b.text || '').join('') || 'Desculpe, ocorreu um erro. Tente novamente.';
+    removeTyping();
+    historico.push({ role: 'assistant', content: resposta });
+    addMsg(resposta, 'bot');
+  } catch (err) {
+    removeTyping();
+    addMsg('Erro ao conectar. Tente novamente em instantes.', 'bot');
+  }
+  carregando = false;
+  document.getElementById('send-btn').disabled = false;
+  input.focus();
+}
+</script>
+</body>
+</html>
